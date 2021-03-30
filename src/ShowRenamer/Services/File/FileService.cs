@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShowRenamer.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -6,11 +7,18 @@ namespace ShowRenamer.Services.File
 {
     public class FileService : IFileService
     {
-        public IEnumerable<string> GetFiles(string path, string pattern)
+        public IEnumerable<string> GetFiles(string path, string pattern, bool includeSubfolders)
         {
             if (Directory.Exists(path))
             {
-                return Directory.GetFiles(path, pattern);
+                if (includeSubfolders)
+                {
+                    return Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+                }
+                else
+                {
+                    return Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+                }
             }
             else
             {
@@ -40,10 +48,17 @@ namespace ShowRenamer.Services.File
             return fileName;
         }
 
-        public void RenameFile(string oldFilePath, string newFileName)
+        public void RenameFile(FileModel file, string newFileName, bool copyToMainfolder)
         {
-            FileInfo fileInfo = new FileInfo(oldFilePath);
-            fileInfo.MoveTo(Path.Combine(fileInfo.Directory.FullName, newFileName));
+            FileInfo fileInfo = new FileInfo(file.Path);
+            if (copyToMainfolder)
+            {
+                fileInfo.MoveTo(Path.Combine(file.RootPath, newFileName));
+            }
+            else
+            {
+                fileInfo.MoveTo(Path.Combine(fileInfo.Directory.FullName, newFileName));
+            }
         }
     }
 }

@@ -17,6 +17,10 @@ namespace ShowRenamer.ViewModels
 
         public string TargetFileNamePattern { get; set; }
 
+        public bool IncludeSubfolders { get; set; }
+
+        public bool CopyToMainfolder { get; set; }
+
         public ObservableCollection<FileModel> Files { get; set; }
 
         ObservableCollection<BrowseFilterModel> BrowseFilters { get; set; }

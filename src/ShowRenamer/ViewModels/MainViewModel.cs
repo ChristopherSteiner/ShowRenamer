@@ -20,6 +20,8 @@ namespace ShowRenamer.ViewModels
         private string showName;
         private string identifierRegex;
         private string targetFileNamePattern;
+        private bool includeSubfolders;
+        private bool copyToMainfolder;
         private BrowseFilterModel selectedBrowseFilter;
         private readonly IFileService fileService;
         private readonly ITmdbService tmdbService;
@@ -93,6 +95,18 @@ namespace ShowRenamer.ViewModels
             }
         }
 
+        public bool IncludeSubfolders
+        {
+            get => includeSubfolders;
+            set => SetField(ref includeSubfolders, value);
+        }
+
+        public bool CopyToMainfolder
+        {
+            get => copyToMainfolder;
+            set => SetField(ref copyToMainfolder, value);
+        }
+
         public ObservableCollection<FileModel> Files { get; set; } = new ObservableCollection<FileModel>();
 
         public ObservableCollection<BrowseFilterModel> BrowseFilters { get; set; } = new ObservableCollection<BrowseFilterModel>
@@ -130,10 +144,11 @@ namespace ShowRenamer.ViewModels
             try
             {
                 Files.Clear();
-                fileService.GetFiles(RootPath, SelectedBrowseFilter.Pattern).ToList().ForEach(file => Files.Add(new FileModel
+                fileService.GetFiles(RootPath, SelectedBrowseFilter.Pattern, IncludeSubfolders).ToList().ForEach(file => Files.Add(new FileModel
                 {
                     Name = fileService.GetFileName(file),
-                    Path = file
+                    Path = file,
+                    RootPath = RootPath
                 }));
             }
             catch (Exception ex)
@@ -171,7 +186,7 @@ namespace ShowRenamer.ViewModels
 
                 foreach (FileModel file in Files)
                 {
-                    fileService.RenameFile(file.Path, ApplyNewFileName(file.Name, regex, episodes));
+                    fileService.RenameFile(file, ApplyNewFileName(file.Name, regex, episodes), copyToMainfolder);
                     counter++;
                     Progress = counter / Files.Count * 100;
                 }
