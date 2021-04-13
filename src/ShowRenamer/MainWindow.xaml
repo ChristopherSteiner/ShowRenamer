@@ -26,14 +26,17 @@
                 <RowDefinition Height="40" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Margin="5" Content="Path" />
             <TextBox Grid.Row="0" Grid.Column="1" MinWidth="150" Margin="10" Height="20" Text="{Binding RootPath}" />
             <CheckBox Grid.Row="1" Grid.Column="1" Margin="10" Content="Include Subfolders" IsChecked="{Binding IncludeSubfolders}" />
-            <Label Grid.Row="2" Grid.Column="0" Margin="5" Content="Extension Filter" />
-            <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Height="20" ItemsSource="{Binding BrowseFilters}" DisplayMemberPath="FullName"
+            <Label Grid.Row="2" Grid.Column="0" Margin="5" Content="Filename Filter" />
+            <TextBox Grid.Row="2" Grid.Column="1" MinWidth="150" Margin="10" Height="20" Text="{Binding FilenameFilter}" />
+            <Label Grid.Row="3" Grid.Column="0" Margin="5" Content="Extension Filter" />
+            <ComboBox Grid.Row="3" Grid.Column="1" Margin="10" Height="20" ItemsSource="{Binding BrowseFilters}" DisplayMemberPath="FullName"
                   SelectedItem="{Binding SelectedBrowseFilter}" SelectedValuePath="FullName" />
-            <Button Grid.Row="3" Grid.Column="1" Margin="10" Content="Browse" Height="20" Command="{Binding BrowseCommand}" />
+            <Button Grid.Row="4" Grid.Column="1" Margin="10" Content="Browse" Height="20" Command="{Binding BrowseCommand}" />
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>

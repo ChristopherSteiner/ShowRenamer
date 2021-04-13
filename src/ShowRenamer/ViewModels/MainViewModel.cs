@@ -20,6 +20,7 @@ namespace ShowRenamer.ViewModels
         private string showName;
         private string identifierRegex;
         private string targetFileNamePattern;
+        private string filenameFilter;
         private bool includeSubfolders;
         private bool copyToMainfolder;
         private BrowseFilterModel selectedBrowseFilter;
@@ -66,6 +67,16 @@ namespace ShowRenamer.ViewModels
         {
             get => showName;
             set => SetField(ref showName, value);
+        }
+
+        public string FilenameFilter
+        {
+            get => filenameFilter;
+            set
+            {
+                SetField(ref filenameFilter, value);
+                Preview();
+            }
         }
 
         public string IdentifierRegex
@@ -144,7 +155,13 @@ namespace ShowRenamer.ViewModels
             try
             {
                 Files.Clear();
-                fileService.GetFiles(RootPath, SelectedBrowseFilter.Pattern, IncludeSubfolders).ToList().ForEach(file => Files.Add(new FileModel
+                string pattern = SelectedBrowseFilter.Pattern;
+                if (!string.IsNullOrWhiteSpace(FilenameFilter))
+                {
+                    pattern = pattern.Replace("*", FilenameFilter);
+                }
+
+                fileService.GetFiles(RootPath, pattern, IncludeSubfolders).ToList().ForEach(file => Files.Add(new FileModel
                 {
                     Name = fileService.GetFileName(file),
                     Path = file,
@@ -221,7 +238,7 @@ namespace ShowRenamer.ViewModels
                 Match match = regex.Match(originalFileName);
                 string fileName = patternRegex.Replace(TargetFileNamePattern, (Match paramMatch) =>
                 {
-                    string paramName = paramMatch.Value.Substring(1, paramMatch.Value.Length - 2);
+                    string paramName = paramMatch.Value[1..^1];
                     if (match.Groups.ContainsKey(paramName))
                     {
                         return match.Groups[paramName].Value;

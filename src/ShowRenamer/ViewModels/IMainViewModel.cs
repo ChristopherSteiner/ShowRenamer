@@ -13,6 +13,8 @@ namespace ShowRenamer.ViewModels
 
         public string ShowName { get; set; }
 
+        public string FilenameFilter { get; set; }
+
         public string IdentifierRegex { get; set; }
 
         public string TargetFileNamePattern { get; set; }
