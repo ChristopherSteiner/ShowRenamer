@@ -15,7 +15,7 @@ namespace ShowRenamer.ViewModels
 
         public string FilenameFilter { get; set; }
 
-        public string IdentifierRegex { get; set; }
+        public RegexFilterModel IdentifierRegex { get; set; }
 
         public string TargetFileNamePattern { get; set; }
 
@@ -27,7 +27,7 @@ namespace ShowRenamer.ViewModels
 
         ObservableCollection<BrowseFilterModel> BrowseFilters { get; set; }
 
-        ObservableCollection<string> PreDefinedIdentifierRegexes { get; set; }
+        ObservableCollection<RegexFilterModel> PreDefinedIdentifierRegexes { get; set; }
 
         BrowseFilterModel SelectedBrowseFilter { get; set; }
 

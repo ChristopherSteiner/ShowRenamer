@@ -18,7 +18,7 @@ namespace ShowRenamer.ViewModels
         private int progress;
         private int showId;
         private string showName;
-        private string identifierRegex;
+        private RegexFilterModel identifierRegex;
         private string targetFileNamePattern;
         private string filenameFilter;
         private bool includeSubfolders;
@@ -79,14 +79,14 @@ namespace ShowRenamer.ViewModels
             }
         }
 
-        public string IdentifierRegex
+        public RegexFilterModel IdentifierRegex
         {
             get => identifierRegex;
             set
             {
-                if (value?.Contains("{Name}") ?? false)
+                if (value?.Regex?.Contains("{Name}") ?? false)
                 {
-                    SetField(ref identifierRegex, string.Empty);
+                    SetField(ref identifierRegex, null);
                 }
                 else
                 {
@@ -128,9 +128,10 @@ namespace ShowRenamer.ViewModels
                 new BrowseFilterModel { Name = "avi", Pattern = "*.avi" }
             };
 
-        public ObservableCollection<string> PreDefinedIdentifierRegexes { get; set; } = new ObservableCollection<string>
+        public ObservableCollection<RegexFilterModel> PreDefinedIdentifierRegexes { get; set; } = new ObservableCollection<RegexFilterModel>
         {
-            "(?:.*)[Ss](?<Season>\\d+)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)"
+            new RegexFilterModel { Name = "S01E01", Regex = "(?:.*)[Ss](?<Season>\\d+)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
+            new RegexFilterModel { Name = "101", Regex = "(?:[-_]+)(?<Season>\\d{1})(?<Episode>\\d{2})(?:[-_]*)(?:.*)\\.(?<Extension>.+)" },
         };
 
         public ObservableCollection<string> PreviewItems { get; set; } = new ObservableCollection<string>();
@@ -190,12 +191,12 @@ namespace ShowRenamer.ViewModels
         {
             if ((Files?.Any() ?? false)
                     && ShowId != 0
-                    && !string.IsNullOrWhiteSpace(IdentifierRegex)
+                    && !string.IsNullOrWhiteSpace(IdentifierRegex?.Regex)
                     && !string.IsNullOrWhiteSpace(TargetFileNamePattern))
             {
                 Progress = 0;
                 int counter = 0;
-                Regex regex = new Regex(IdentifierRegex);
+                Regex regex = new Regex(IdentifierRegex?.Regex);
                 IEnumerable<TmdbEpisodeResultModel> episodes = tmdbService.GetAllEpisodes(ShowId)
                     .ConfigureAwait(false)
                     .GetAwaiter()
@@ -214,11 +215,11 @@ namespace ShowRenamer.ViewModels
         {
             if ((Files?.Any() ?? false)
                     && ShowId != 0
-                    && !string.IsNullOrWhiteSpace(IdentifierRegex)
+                    && !string.IsNullOrWhiteSpace(IdentifierRegex?.Regex)
                     && !string.IsNullOrWhiteSpace(TargetFileNamePattern))
             {
                 PreviewItems.Clear();
-                Regex regex = new Regex(IdentifierRegex);
+                Regex regex = new Regex(IdentifierRegex.Regex);
                 IEnumerable<TmdbEpisodeResultModel> episodes = tmdbService.GetAllEpisodes(ShowId)
                     .ConfigureAwait(false)
                     .GetAwaiter()
