@@ -15,6 +15,8 @@ namespace ShowRenamer
             InitializeComponent();
             DataContext = searchViewModel;
             SearchViewModel = searchViewModel;
+
+            txtSearchQuery.Focus();
         }
     }
 }

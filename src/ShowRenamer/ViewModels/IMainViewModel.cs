@@ -36,5 +36,7 @@ namespace ShowRenamer.ViewModels
         public ICommand OpenSearchDialogCommand { get; }
 
         public ICommand ApplyCommand { get; }
+
+        public ICommand PreviewCommand { get; }
     }
 }

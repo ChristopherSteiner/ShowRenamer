@@ -115,7 +115,11 @@ namespace ShowRenamer.ViewModels
         public bool CopyToMainfolder
         {
             get => copyToMainfolder;
-            set => SetField(ref copyToMainfolder, value);
+            set
+            {
+                SetField(ref copyToMainfolder, value);
+                Preview();
+            }
         }
 
         public ObservableCollection<FileModel> Files { get; set; } = new ObservableCollection<FileModel>();
@@ -131,6 +135,7 @@ namespace ShowRenamer.ViewModels
         public ObservableCollection<RegexFilterModel> PreDefinedIdentifierRegexes { get; set; } = new ObservableCollection<RegexFilterModel>
         {
             new RegexFilterModel { Name = "S01E01", Regex = "(?:.*)[Ss](?<Season>\\d+)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
+            new RegexFilterModel { Name = "Season01E01", Regex = "(?:.*)(?:Season|season)(?<Season>\\d+)(?:\\.?)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
             new RegexFilterModel { Name = "101", Regex = "(?:[-_]+)(?<Season>\\d{1})(?<Episode>\\d{2})(?:[-_]*)(?:.*)\\.(?<Extension>.+)" },
         };
 
@@ -150,6 +155,8 @@ namespace ShowRenamer.ViewModels
         public ICommand OpenSearchDialogCommand => new RelayCommand(Search);
 
         public ICommand ApplyCommand => new RelayCommand(Apply);
+
+        public ICommand PreviewCommand => new RelayCommand(Preview);
 
         private void Browse()
         {
