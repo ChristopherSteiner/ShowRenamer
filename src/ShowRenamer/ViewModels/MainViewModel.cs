@@ -137,6 +137,9 @@ namespace ShowRenamer.ViewModels
             new RegexFilterModel { Name = "S01E01", Regex = "(?:.*)[Ss](?<Season>\\d+)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
             new RegexFilterModel { Name = "Season01E01", Regex = "(?:.*)(?:Season|season)(?<Season>\\d+)(?:\\.?)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
             new RegexFilterModel { Name = "101", Regex = "(?:[-_]+)(?<Season>\\d{1})(?<Episode>\\d{2})(?:[-_]*)(?:.*)\\.(?<Extension>.+)" },
+            new RegexFilterModel { Name = "1001 (Season 10 Episode 01)", Regex = "(?:[-_]+)(?<Season>\\d{2})(?<Episode>\\d{2})(?:[-_]*)(?:.*)\\.(?<Extension>.+)" },
+            new RegexFilterModel { Name = "E01", Regex = "(?:\\.?)[Ee](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
+            new RegexFilterModel { Name = "Ep.01", Regex = "(?:\\.?)[EePp\\.](?<Episode>\\d+)(?:.*)\\.(?<Extension>.+)" },
         };
 
         public ObservableCollection<string> PreviewItems { get; set; } = new ObservableCollection<string>();
@@ -254,7 +257,7 @@ namespace ShowRenamer.ViewModels
                     else if (paramName == "Name")
                     {
                         string episodeName = null;
-                        int? season = default;
+                        int? season = 1;
                         int? episode = default;
                         if (match.Groups.TryGetValue("Season", out Group seasonGroup) && int.TryParse(seasonGroup.Value, out int seasonNumber))
                         {
